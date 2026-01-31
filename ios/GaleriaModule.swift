@@ -61,6 +61,13 @@ public class GaleriaModule: Module {
         galeriaCloseCurrentViewer()
       }
     }
+
+    Function("setIndex") { (index: Int) in
+      print("[galeria] setIndex(\(index)) called")
+      DispatchQueue.main.async {
+        galeriaSetCurrentIndex(index)
+      }
+    }
   }
 
   func onIndexChange(index: Int) {

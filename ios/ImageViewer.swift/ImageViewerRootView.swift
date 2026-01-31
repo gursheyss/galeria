@@ -304,6 +304,18 @@ class ImageViewerRootView: UIView, RootViewType {
     @objc private func didTapRightNavItemSecondary() {
         onRightNavBarSecondaryTapped?(currentIndex)
     }
+
+    func setCurrentIndex(_ index: Int) {
+        guard let datasource = imageDatasource else { return }
+        if index < 0 || index >= datasource.numberOfImages() { return }
+        let newVC = createViewController(for: datasource.imageItem(at: index), at: index)
+        newVC.view.gestureRecognizers?.removeAll(where: { $0 is UIPanGestureRecognizer })
+        let direction: UIPageViewController.NavigationDirection =
+            index >= currentIndex ? .forward : .reverse
+        pageViewController.setViewControllers([newVC], direction: direction, animated: true)
+        currentIndex = index
+        onIndexChange?(currentIndex)
+    }
 }
 
 extension ImageViewerRootView: TransitionProvider {

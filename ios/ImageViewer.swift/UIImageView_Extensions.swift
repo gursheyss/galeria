@@ -1,6 +1,7 @@
 import UIKit
 
 private var currentNavigationView: NavigationView?
+private var currentViewerRootView: ImageViewerRootView?
 
 func galeriaCloseCurrentViewer() {
     if currentNavigationView == nil {
@@ -9,6 +10,13 @@ func galeriaCloseCurrentViewer() {
         print("[galeria] close() dismissing viewer")
     }
     currentNavigationView?.popView(animated: true)
+}
+
+func galeriaSetCurrentIndex(_ index: Int) {
+    if currentViewerRootView == nil {
+        print("[galeria] setIndex() no currentViewerRootView")
+    }
+    currentViewerRootView?.setCurrentIndex(index)
 }
 
 extension UIImageView {
@@ -213,12 +221,14 @@ extension UIImageView {
         )
         
         placeholderRoot.viewerRootView = viewerView
+        currentViewerRootView = viewerView
 
         let optionsDismissCallback = viewerView.onDismiss
         viewerView.onDismiss = { [weak navView] in
             optionsDismissCallback?()
             navView?.removeFromSuperview()
             currentNavigationView = nil
+            currentViewerRootView = nil
         }
 
         navView.pushView(viewerView, animated: true)

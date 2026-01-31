@@ -46,5 +46,9 @@ class GaleriaModule : Module() {
         Function("close") {
             GaleriaView.dismissCurrentViewer()
         }
+
+        Function("setIndex") { _index: Int ->
+            // no-op on Android for now
+        }
     }
 }

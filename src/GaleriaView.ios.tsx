@@ -153,6 +153,9 @@ const Galeria = Object.assign(
     close() {
       galeriaModule?.close?.()
     },
+    setIndex(index: number) {
+      galeriaModule?.setIndex?.(index)
+    },
   },
 )
 

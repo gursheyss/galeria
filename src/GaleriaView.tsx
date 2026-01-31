@@ -329,6 +329,7 @@ const Galeria: typeof Native = Object.assign(Root, {
   Image,
   Popup: () => null,
   close() {},
+  setIndex(_index: number) {},
 })
 
 export default Galeria
