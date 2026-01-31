@@ -1,6 +1,13 @@
 
 # Galeria 📷
 
+> Fork note: `gursheyss/galeria` adds a few product-specific features on top of upstream.
+>
+> Added in this fork:
+> - Video items via `mediaTypes` (mixed image + video galleries)
+> - Header actions: primary + secondary right icons (secondary can be destructive)
+> - JS API: `Galeria.close()` to dismiss the current viewer
+
 An image viewer for React (+ Native). **It works with any image component - bring your own image component (BYOIC™)**
 
 <!-- <video width="300" src="https://github.com/nandorojo/galeria/assets/13172299/5e915a75-bd40-410f-99fb-5df644ce96ad" ></video> -->
