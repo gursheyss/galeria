@@ -56,7 +56,10 @@ public class GaleriaModule: Module {
     }
 
     Function("close") {
-      galeriaCloseCurrentViewer()
+      print("[galeria] close() called")
+      DispatchQueue.main.async {
+        galeriaCloseCurrentViewer()
+      }
     }
   }
 

@@ -3,6 +3,11 @@ import UIKit
 private var currentNavigationView: NavigationView?
 
 func galeriaCloseCurrentViewer() {
+    if currentNavigationView == nil {
+        print("[galeria] close() no currentNavigationView")
+    } else {
+        print("[galeria] close() dismissing viewer")
+    }
     currentNavigationView?.popView(animated: true)
 }
 
