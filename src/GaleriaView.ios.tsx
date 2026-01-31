@@ -73,7 +73,8 @@ const Galeria = Object.assign(
           closeIconName,
           rightNavItemIconName,
           rightNavItemSecondaryIconName,
-          rightNavItemSecondaryDestructive,
+          rightNavItemSecondaryDestructive:
+            rightNavItemSecondaryDestructive ?? false,
           onPressRightNavItemIcon,
           onPressRightNavItemSecondaryIcon,
           urls,
@@ -123,7 +124,8 @@ const Galeria = Object.assign(
           }
           rightNavItemSecondaryDestructive={
             props.rightNavItemSecondaryDestructive ??
-            rightNavItemSecondaryDestructive
+            rightNavItemSecondaryDestructive ??
+            false
           }
           onPressRightNavItemSecondaryIcon={
             props.onPressRightNavItemSecondaryIcon ??

@@ -200,6 +200,15 @@ function Root({
   urls,
   theme = 'dark',
   ids,
+  mediaTypes,
+  closeIconName,
+  rightNavItemIconName,
+  rightNavItemSecondaryIconName,
+  rightNavItemSecondaryDestructive,
+  onPressRightNavItemIcon,
+  onPressRightNavItemSecondaryIcon,
+  hideBlurOverlay = false,
+  hidePageIndicators = false,
 }: ComponentProps<typeof Native>) {
   const [openState, setOpen] = useState({
     open: false,
@@ -215,9 +224,16 @@ function Root({
   return (
     <GaleriaContext.Provider
       value={{
-        hideBlurOverlay: false,
-        hidePageIndicators: false,
-        closeIconName: undefined,
+        hideBlurOverlay,
+        hidePageIndicators,
+        closeIconName,
+        mediaTypes,
+        rightNavItemIconName,
+        rightNavItemSecondaryIconName,
+        rightNavItemSecondaryDestructive:
+          rightNavItemSecondaryDestructive ?? false,
+        onPressRightNavItemIcon,
+        onPressRightNavItemSecondaryIcon,
         setOpen,
         urls,
         theme,
@@ -312,6 +328,7 @@ function PopupModal({
 const Galeria: typeof Native = Object.assign(Root, {
   Image,
   Popup: () => null,
+  close() {},
 })
 
 export default Galeria
