@@ -58,6 +58,14 @@ class GaleriaView(context: Context) : ViewGroup(context) {
         ViewModelProvider(getViewModelOwner(context)).get(ImageViewerActionViewModel::class.java)
     }
 
+    companion object {
+        private var currentViewModel: ImageViewerActionViewModel? = null
+
+        fun dismissCurrentViewer() {
+            currentViewModel?.dismiss()
+        }
+    }
+
     fun dismiss()  {
         viewModel.dismiss()
     }
@@ -120,6 +128,7 @@ class GaleriaView(context: Context) : ViewGroup(context) {
                 }
                 childView.setOnClickListener {
                     setupConfig()
+                    currentViewModel = viewModel
                     if (!disableHiddenOriginalImage) {
                         viewer.setViewerCallback(CustomViewerCallback(childView as ImageView) { index ->
                             onIndexChange(mapOf("currentIndex" to index))
@@ -218,7 +227,6 @@ class SimpleImageLoader : ImageLoader {
             .into(view)
     }
 }
-
 
 
 

@@ -42,5 +42,9 @@ class GaleriaModule : Module() {
                 view.transitionOffsetX = transitionOffsetX
             }
         }
+
+        Function("close") {
+            GaleriaView.dismissCurrentViewer()
+        }
     }
 }
