@@ -83,6 +83,34 @@ extension UIImageView {
     }
 
     public func setupImageViewer(
+        urls:[URL],
+        mediaTypes:[String],
+        initialIndex:Int = 0,
+        options:[ImageViewerOption] = [],
+        placeholder: UIImage? = nil,
+        from:UIViewController? = nil,
+        imageLoader:ImageLoader? = nil) {
+
+        var items: [ImageItem] = []
+        for (index, url) in urls.enumerated() {
+            let mediaType = index < mediaTypes.count ? mediaTypes[index] : "image"
+            if mediaType == "video" {
+                items.append(.video(url, thumbnail: placeholder))
+            } else {
+                items.append(.url(url, placeholder: placeholder))
+            }
+        }
+
+        let datasource = SimpleImageDatasource(imageItems: items)
+        setup(
+            datasource: datasource,
+            initialIndex: initialIndex,
+            options: options,
+            from: from,
+            imageLoader: imageLoader)
+    }
+
+    public func setupImageViewer(
         datasource:ImageDataSource,
         initialIndex:Int = 0,
         options:[ImageViewerOption] = [],

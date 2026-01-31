@@ -74,6 +74,7 @@ class GaleriaView: ExpoView {
 
   var theme: Theme = .dark
   var urls: [String]?
+  var mediaTypes: [String]?
   var initialIndex: Int?
   var closeIconName: String?
   var rightNavItemIconName: String?
@@ -113,7 +114,11 @@ class GaleriaView: ExpoView {
       return URL(fileURLWithPath: string)
     }
 
-    childImage.setupImageViewer(urls: urlObjects, initialIndex: initialIndex, options: options)
+    if let mediaTypes = self.mediaTypes, !mediaTypes.isEmpty {
+      childImage.setupImageViewer(urls: urlObjects, mediaTypes: mediaTypes, initialIndex: initialIndex, options: options)
+    } else {
+      childImage.setupImageViewer(urls: urlObjects, initialIndex: initialIndex, options: options)
+    }
   }
 
   private func setupImageViewerWithSingleImage(

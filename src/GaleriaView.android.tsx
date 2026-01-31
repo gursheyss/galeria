@@ -15,6 +15,7 @@ const NativeImage = requireNativeView<
   GaleriaViewProps & {
     edgeToEdge: boolean
     urls?: string[]
+    mediaTypes?: string[]
     theme: 'dark' | 'light'
     onIndexChange?: (event: GaleriaIndexChangedEvent) => void
   }
@@ -28,15 +29,17 @@ const Galeria = Object.assign(
     urls,
     theme = 'dark',
     ids,
+    mediaTypes,
   }: {
     children: React.ReactNode
-  } & Partial<Pick<GaleriaContext, 'theme' | 'ids' | 'urls'>>) {
+  } & Partial<Pick<GaleriaContext, 'theme' | 'ids' | 'urls' | 'mediaTypes'>>) {
     return (
       <GaleriaContext.Provider
         value={{
           hideBlurOverlay: false,
           hidePageIndicators: false,
           closeIconName: undefined,
+          mediaTypes,
           urls,
           theme,
           initialIndex: 0,
@@ -52,7 +55,7 @@ const Galeria = Object.assign(
   },
   {
     Image({ edgeToEdge, ...props }: GaleriaViewProps) {
-      const { theme, urls } = useContext(GaleriaContext)
+      const { theme, urls, mediaTypes } = useContext(GaleriaContext)
 
       if (__DEV__) {
         // warn the user once about unnecessary defined prop
@@ -71,6 +74,7 @@ const Galeria = Object.assign(
 
             return Image.resolveAssetSource(url).uri
           })}
+          mediaTypes={mediaTypes}
           {...props}
         />
       )

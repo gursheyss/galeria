@@ -15,6 +15,10 @@ public class GaleriaModule: Module {
         view.urls = urls
       }
 
+      Prop("mediaTypes") { (view, mediaTypes: [String]?) in
+        view.mediaTypes = mediaTypes
+      }
+
       Prop("index") { (view, index: Int?) in
         view.initialIndex = index
       }

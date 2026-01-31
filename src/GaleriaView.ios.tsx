@@ -10,6 +10,7 @@ const NativeImage = requireNativeView<
   GaleriaViewProps & {
     urls?: string[]
     closeIconName?: SFSymbol
+    mediaTypes?: string[]
     theme: 'dark' | 'light'
     onIndexChange?: (event: GaleriaIndexChangedEvent) => void
     hideBlurOverlay?: boolean
@@ -28,10 +29,14 @@ const Galeria = Object.assign(
     ids,
     hideBlurOverlay = false,
     hidePageIndicators = false,
+    mediaTypes,
   }: {
     children: React.ReactNode
   } & Partial<
-    Pick<GaleriaContext, 'theme' | 'ids' | 'urls' | 'closeIconName' | 'hideBlurOverlay' | 'hidePageIndicators'>
+    Pick<
+      GaleriaContext,
+      'theme' | 'ids' | 'urls' | 'closeIconName' | 'hideBlurOverlay' | 'hidePageIndicators' | 'mediaTypes'
+    >
   >) {
     return (
       <GaleriaContext.Provider
@@ -46,6 +51,7 @@ const Galeria = Object.assign(
           ids,
           hideBlurOverlay,
           hidePageIndicators,
+          mediaTypes,
         }}
       >
         {children}
@@ -54,7 +60,7 @@ const Galeria = Object.assign(
   },
   {
     Image(props: GaleriaViewProps) {
-      const { theme, urls, initialIndex, closeIconName, hideBlurOverlay, hidePageIndicators } =
+      const { theme, urls, initialIndex, closeIconName, hideBlurOverlay, hidePageIndicators, mediaTypes } =
         useContext(GaleriaContext)
       return (
         <NativeImage
@@ -63,6 +69,7 @@ const Galeria = Object.assign(
           theme={theme}
           hideBlurOverlay={props.hideBlurOverlay ?? hideBlurOverlay}
           hidePageIndicators={props.hidePageIndicators ?? hidePageIndicators}
+          mediaTypes={mediaTypes}
           urls={urls?.map((url) => {
             if (typeof url === 'string') {
               return url

@@ -109,6 +109,28 @@ class ImageViewerRootView: UIView, RootViewType {
         fatalError("init(coder:) has not been implemented")
     }
 
+    private func createViewController(for item: ImageItem, at index: Int) -> UIViewController {
+        switch item {
+        case .video(let url, let thumbnail):
+            return VideoViewerController(index: index, videoURL: url, thumbnail: thumbnail)
+        case .image, .url:
+            return ImageViewerController(
+                index: index,
+                imageItem: item,
+                imageLoader: imageLoader
+            )
+        }
+    }
+
+    private func getIndex(from viewController: UIViewController) -> Int? {
+        if let imageVC = viewController as? ImageViewerController {
+            return imageVC.index
+        } else if let videoVC = viewController as? VideoViewerController {
+            return videoVC.index
+        }
+        return nil
+    }
+
     private func setupViews() {
         addSubview(backgroundView)
 
@@ -125,17 +147,16 @@ class ImageViewerRootView: UIView, RootViewType {
         addSubview(pageViewController.view)
 
         if let datasource = imageDatasource {
-            let initialVC = ImageViewerController(
-                index: initialIndex,
-                imageItem: datasource.imageItem(at: initialIndex),
-                imageLoader: imageLoader
-            )
-            self.initialViewController = initialVC
-            
-            if let sourceImage = self.sourceImage {
-                initialVC.initialPlaceholder = sourceImage
+            let imageItem = datasource.imageItem(at: initialIndex)
+            let initialVC = createViewController(for: imageItem, at: initialIndex)
+
+            if let imageVC = initialVC as? ImageViewerController {
+                self.initialViewController = imageVC
+                if let sourceImage = self.sourceImage {
+                    imageVC.initialPlaceholder = sourceImage
+                }
             }
-            
+
             initialVC.view.gestureRecognizers?.removeAll(where: { $0 is UIPanGestureRecognizer })
             pageViewController.setViewControllers([initialVC], direction: .forward, animated: false)
 
@@ -295,18 +316,14 @@ extension ImageViewerRootView: UIPageViewControllerDataSource {
         _ pageViewController: UIPageViewController,
         viewControllerBefore viewController: UIViewController
     ) -> UIViewController? {
-        guard let vc = viewController as? ImageViewerController,
-              let datasource = imageDatasource,
-              vc.index > 0 else {
+        guard let datasource = imageDatasource,
+              let currentIndex = getIndex(from: viewController),
+              currentIndex > 0 else {
             return nil
         }
 
-        let newIndex = vc.index - 1
-        let newVC = ImageViewerController(
-            index: newIndex,
-            imageItem: datasource.imageItem(at: newIndex),
-            imageLoader: imageLoader
-        )
+        let newIndex = currentIndex - 1
+        let newVC = createViewController(for: datasource.imageItem(at: newIndex), at: newIndex)
         newVC.view.gestureRecognizers?.removeAll(where: { $0 is UIPanGestureRecognizer })
         return newVC
     }
@@ -315,18 +332,14 @@ extension ImageViewerRootView: UIPageViewControllerDataSource {
         _ pageViewController: UIPageViewController,
         viewControllerAfter viewController: UIViewController
     ) -> UIViewController? {
-        guard let vc = viewController as? ImageViewerController,
-              let datasource = imageDatasource,
-              vc.index < datasource.numberOfImages() - 1 else {
+        guard let datasource = imageDatasource,
+              let currentIndex = getIndex(from: viewController),
+              currentIndex < datasource.numberOfImages() - 1 else {
             return nil
         }
 
-        let newIndex = vc.index + 1
-        let newVC = ImageViewerController(
-            index: newIndex,
-            imageItem: datasource.imageItem(at: newIndex),
-            imageLoader: imageLoader
-        )
+        let newIndex = currentIndex + 1
+        let newVC = createViewController(for: datasource.imageItem(at: newIndex), at: newIndex)
         newVC.view.gestureRecognizers?.removeAll(where: { $0 is UIPanGestureRecognizer })
         return newVC
     }
@@ -349,8 +362,9 @@ extension ImageViewerRootView: UIPageViewControllerDelegate {
         previousViewControllers: [UIViewController],
         transitionCompleted completed: Bool
     ) {
-        if completed, let currentVC = pageViewController.viewControllers?.first as? ImageViewerController {
-            currentIndex = currentVC.index
+        if completed, let currentVC = pageViewController.viewControllers?.first,
+           let index = getIndex(from: currentVC) {
+            currentIndex = index
             onIndexChange?(currentIndex)
         }
     }
