@@ -4,6 +4,8 @@
   "description": "A native galeria.",
   "main": "build/index.js",
   "types": "build/index.d.ts",
+  "source": "src/index.ts",
+  "react-native": "src/index.ts",
   "scripts": {
     "build": "expo-module build",
     "clean": "expo-module clean",
