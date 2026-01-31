@@ -5,7 +5,11 @@ public class GaleriaModule: Module {
     Name("Galeria")
 
     View(GaleriaView.self) {
-      Events("onIndexChange")
+      Events(
+        "onIndexChange",
+        "onPressRightNavItemIcon",
+        "onPressRightNavItemSecondaryIcon"
+      )
 
       OnViewDidUpdateProps { (view) in
         view.setupImageView()
@@ -29,8 +33,16 @@ public class GaleriaModule: Module {
       Prop("closeIconName") { (view, closeIconName: String?) in
         view.closeIconName = closeIconName
       }
-      Prop("rightNavItemIconName") { (view, rightNavItemIconName: String) in
+      Prop("rightNavItemIconName") { (view, rightNavItemIconName: String?) in
         view.rightNavItemIconName = rightNavItemIconName
+      }
+
+      Prop("rightNavItemSecondaryIconName") { (view, rightNavItemSecondaryIconName: String?) in
+        view.rightNavItemSecondaryIconName = rightNavItemSecondaryIconName
+      }
+
+      Prop("rightNavItemSecondaryDestructive") { (view, rightNavItemSecondaryDestructive: Bool?) in
+        view.rightNavItemSecondaryDestructive = rightNavItemSecondaryDestructive ?? false
       }
 
       Prop("hideBlurOverlay") { (view, hideBlurOverlay: Bool?) in
@@ -41,6 +53,10 @@ public class GaleriaModule: Module {
         view.hidePageIndicators = hidePageIndicators ?? false
       }
 
+    }
+
+    Function("close") {
+      galeriaCloseCurrentViewer()
     }
   }
 

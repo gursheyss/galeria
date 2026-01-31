@@ -23,6 +23,15 @@ export const GaleriaContext = createContext({
   hideBlurOverlay: false,
   hidePageIndicators: false,
   mediaTypes: undefined as string[] | undefined,
+  rightNavItemIconName: undefined as undefined | SFSymbol,
+  onPressRightNavItemIcon: undefined as
+    | ((event: { nativeEvent: { index: number } }) => void)
+    | undefined,
+  rightNavItemSecondaryIconName: undefined as undefined | SFSymbol,
+  onPressRightNavItemSecondaryIcon: undefined as
+    | ((event: { nativeEvent: { index: number } }) => void)
+    | undefined,
+  rightNavItemSecondaryDestructive: false,
 })
 
 export type GaleriaContext = ContextType<typeof GaleriaContext>

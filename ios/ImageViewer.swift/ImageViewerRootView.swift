@@ -31,6 +31,7 @@ class ImageViewerRootView: UIView, RootViewType {
 
     private lazy var navItem = UINavigationItem()
     private var onRightNavBarTapped: ((Int) -> Void)?
+    private var onRightNavBarSecondaryTapped: ((Int) -> Void)?
 
     private(set) var currentIndex: Int = 0
     private var initialViewController: ImageViewerController?
@@ -180,6 +181,23 @@ class ImageViewerRootView: UIView, RootViewType {
 
     private func applyOptions() {
         let closeButton = navItem.rightBarButtonItem
+        var rightPrimaryButton: UIBarButtonItem?
+        var rightSecondaryButton: UIBarButtonItem?
+
+        func updateRightButtons() {
+            var items: [UIBarButtonItem] = []
+            if let closeButton = closeButton {
+                items.append(closeButton)
+            }
+            if let rightSecondaryButton = rightSecondaryButton {
+                items.append(rightSecondaryButton)
+            }
+            if let rightPrimaryButton = rightPrimaryButton {
+                items.append(rightPrimaryButton)
+            }
+
+            navItem.rightBarButtonItems = items.isEmpty ? nil : items
+        }
         
         options.forEach { option in
             switch option {
@@ -196,11 +214,8 @@ class ImageViewerRootView: UIView, RootViewType {
                     target: self,
                     action: #selector(didTapRightNavItem)
                 )
-                if let closeButton = closeButton {
-                    navItem.rightBarButtonItems = [closeButton, customButton]
-                } else {
-                    navItem.rightBarButtonItem = customButton
-                }
+                rightPrimaryButton = customButton
+                updateRightButtons()
                 onRightNavBarTapped = onTap
             case .rightNavItemIcon(let icon, let onTap):
                 let customButton = UIBarButtonItem(
@@ -209,12 +224,22 @@ class ImageViewerRootView: UIView, RootViewType {
                     target: self,
                     action: #selector(didTapRightNavItem)
                 )
-                if let closeButton = closeButton {
-                    navItem.rightBarButtonItems = [closeButton, customButton]
-                } else {
-                    navItem.rightBarButtonItem = customButton
-                }
+                rightPrimaryButton = customButton
+                updateRightButtons()
                 onRightNavBarTapped = onTap
+            case .rightNavItemSecondaryIcon(let icon, let destructive, let onTap):
+                let customButton = UIBarButtonItem(
+                    image: icon,
+                    style: .plain,
+                    target: self,
+                    action: #selector(didTapRightNavItemSecondary)
+                )
+                if destructive {
+                    customButton.tintColor = UIColor.systemRed
+                }
+                rightSecondaryButton = customButton
+                updateRightButtons()
+                onRightNavBarSecondaryTapped = onTap
             case .onIndexChange(let callback):
                 self.onIndexChange = callback
             case .onDismiss(let callback):
@@ -274,6 +299,10 @@ class ImageViewerRootView: UIView, RootViewType {
 
     @objc private func didTapRightNavItem() {
         onRightNavBarTapped?(currentIndex)
+    }
+
+    @objc private func didTapRightNavItemSecondary() {
+        onRightNavBarSecondaryTapped?(currentIndex)
     }
 }
 

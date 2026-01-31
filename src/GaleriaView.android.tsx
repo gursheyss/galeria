@@ -2,12 +2,17 @@ import { requireNativeView } from 'expo'
 
 import { useContext } from 'react'
 import { Image } from 'react-native'
+import { NativeModulesProxy } from 'expo-modules-core'
 import {
   controlEdgeToEdgeValues,
   isEdgeToEdge,
 } from 'react-native-is-edge-to-edge'
 import { GaleriaContext } from './context'
-import { GaleriaIndexChangedEvent, GaleriaViewProps } from './Galeria.types'
+import {
+  GaleriaIndexChangedEvent,
+  GaleriaRightNavItemPressedEvent,
+  GaleriaViewProps,
+} from './Galeria.types'
 
 const EDGE_TO_EDGE = isEdgeToEdge()
 
@@ -18,10 +23,15 @@ const NativeImage = requireNativeView<
     mediaTypes?: string[]
     theme: 'dark' | 'light'
     onIndexChange?: (event: GaleriaIndexChangedEvent) => void
+    onPressRightNavItemIcon?: (event: GaleriaRightNavItemPressedEvent) => void
+    onPressRightNavItemSecondaryIcon?: (
+      event: GaleriaRightNavItemPressedEvent
+    ) => void
   }
 >('Galeria')
 
 const noop = () => {}
+const galeriaModule = NativeModulesProxy.Galeria
 
 const Galeria = Object.assign(
   function Galeria({
@@ -30,9 +40,27 @@ const Galeria = Object.assign(
     theme = 'dark',
     ids,
     mediaTypes,
+    rightNavItemIconName,
+    rightNavItemSecondaryIconName,
+    rightNavItemSecondaryDestructive,
+    onPressRightNavItemIcon,
+    onPressRightNavItemSecondaryIcon,
   }: {
     children: React.ReactNode
-  } & Partial<Pick<GaleriaContext, 'theme' | 'ids' | 'urls' | 'mediaTypes'>>) {
+  } & Partial<
+    Pick<
+      GaleriaContext,
+      | 'theme'
+      | 'ids'
+      | 'urls'
+      | 'mediaTypes'
+      | 'rightNavItemIconName'
+      | 'rightNavItemSecondaryIconName'
+      | 'rightNavItemSecondaryDestructive'
+      | 'onPressRightNavItemIcon'
+      | 'onPressRightNavItemSecondaryIcon'
+    >
+  >) {
     return (
       <GaleriaContext.Provider
         value={{
@@ -42,6 +70,11 @@ const Galeria = Object.assign(
           mediaTypes,
           urls,
           theme,
+          rightNavItemIconName,
+          rightNavItemSecondaryIconName,
+          rightNavItemSecondaryDestructive,
+          onPressRightNavItemIcon,
+          onPressRightNavItemSecondaryIcon,
           initialIndex: 0,
           open: false,
           src: '',
@@ -55,7 +88,16 @@ const Galeria = Object.assign(
   },
   {
     Image({ edgeToEdge, ...props }: GaleriaViewProps) {
-      const { theme, urls, mediaTypes } = useContext(GaleriaContext)
+      const {
+        theme,
+        urls,
+        mediaTypes,
+        rightNavItemIconName,
+        rightNavItemSecondaryIconName,
+        rightNavItemSecondaryDestructive,
+        onPressRightNavItemIcon,
+        onPressRightNavItemSecondaryIcon,
+      } = useContext(GaleriaContext)
 
       if (__DEV__) {
         // warn the user once about unnecessary defined prop
@@ -65,6 +107,13 @@ const Galeria = Object.assign(
       return (
         <NativeImage
           onIndexChange={props.onIndexChange}
+          onPressRightNavItemIcon={
+            props.onPressRightNavItemIcon ?? onPressRightNavItemIcon
+          }
+          onPressRightNavItemSecondaryIcon={
+            props.onPressRightNavItemSecondaryIcon ??
+            onPressRightNavItemSecondaryIcon
+          }
           edgeToEdge={EDGE_TO_EDGE || (edgeToEdge ?? false)}
           theme={theme}
           urls={urls?.map((url) => {
@@ -75,6 +124,16 @@ const Galeria = Object.assign(
             return Image.resolveAssetSource(url).uri
           })}
           mediaTypes={mediaTypes}
+          rightNavItemIconName={
+            props.rightNavItemIconName ?? rightNavItemIconName
+          }
+          rightNavItemSecondaryIconName={
+            props.rightNavItemSecondaryIconName ?? rightNavItemSecondaryIconName
+          }
+          rightNavItemSecondaryDestructive={
+            props.rightNavItemSecondaryDestructive ??
+            rightNavItemSecondaryDestructive
+          }
           {...props}
         />
       )
@@ -82,6 +141,9 @@ const Galeria = Object.assign(
     Popup: (() => null) as React.FC<{
       disableTransition?: 'web'
     }>,
+    close() {
+      galeriaModule?.close?.()
+    },
   },
 )
 

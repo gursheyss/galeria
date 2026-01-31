@@ -78,9 +78,12 @@ class GaleriaView: ExpoView {
   var initialIndex: Int?
   var closeIconName: String?
   var rightNavItemIconName: String?
+  var rightNavItemSecondaryIconName: String?
+  var rightNavItemSecondaryDestructive: Bool = false
   var hideBlurOverlay: Bool = false
   var hidePageIndicators: Bool = false
   let onPressRightNavItemIcon = EventDispatcher()
+  let onPressRightNavItemSecondaryIcon = EventDispatcher()
   let onIndexChange = EventDispatcher()
 
   public func setupImageView() {
@@ -156,6 +159,22 @@ class GaleriaView: ExpoView {
           self.onPressRightNavItemIcon(["index": index])
         })
       options.append(rightNavItemOption)
+    }
+
+    if let rightSecondaryIconName = rightNavItemSecondaryIconName,
+      let rightSecondaryIconImage = UIImage(systemName: rightSecondaryIconName)?
+        .withTintColor(
+          rightNavItemSecondaryDestructive ? UIColor.systemRed : iconColor,
+          renderingMode: .alwaysOriginal
+        )
+    {
+      let rightNavItemSecondaryOption = ImageViewerOption.rightNavItemSecondaryIcon(
+        rightSecondaryIconImage,
+        destructive: rightNavItemSecondaryDestructive,
+        onTap: { index in
+          self.onPressRightNavItemSecondaryIcon(["index": index])
+        })
+      options.append(rightNavItemSecondaryOption)
     }
 
     options.append(

@@ -2,6 +2,10 @@ import UIKit
 
 private var currentNavigationView: NavigationView?
 
+func galeriaCloseCurrentViewer() {
+    currentNavigationView?.popView(animated: true)
+}
+
 extension UIImageView {
 
     private class TapWithDataRecognizer:UITapGestureRecognizer {
