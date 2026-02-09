@@ -66,6 +66,4 @@ type GaleriaComponent = ((props: GaleriaRootProps) => ReactElement | null) & {
   setIndex: (index: number) => void
 }
 
-declare const Galeria: GaleriaComponent
-
-export default Galeria
+export const Galeria: GaleriaComponent
