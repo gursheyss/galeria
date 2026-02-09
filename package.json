@@ -3,7 +3,7 @@
   "version": "2.0.0-alpha.0",
   "description": "A native galeria.",
   "main": "build/index.js",
-  "types": "build/index.d.ts",
+  "types": "src/index.ts",
   "source": "src/index.ts",
   "react-native": "src/index.ts",
   "scripts": {
